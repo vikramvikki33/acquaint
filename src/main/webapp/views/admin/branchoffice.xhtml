@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title><ui:insert name="title">Branch Office Manager</ui:insert></title>
+</h:head>
+<h:body>
+	<ui:insert>
+		<h:form id="branchOfficeform">
+			<p:layout fullPage="true">
+				<p:layoutUnit position="north" size="60">
+
+				</p:layoutUnit>
+				<p:layoutUnit position="west" size="200" collapsible="true"
+					header="Menu">
+					<p:panelMenu model="#{navigationControllerBean.menuModel}" />
+				</p:layoutUnit>
+				<p:layoutUnit position="center" size="600">
+					<p:growl id="growlmsg" showDetail="true" showSummary="true" />
+					<f:loadBundle var="cLabel" basename="com.lables.bvs-common-label" />
+					<div id="content">
+						<div class="ui-g">
+							<div class="ui-g-5 ">
+								<h2>Branch Office Management</h2>
+							</div>
+							<div class="ui-g-7">
+								<p:commandButton value="Add New"
+									actionListener="#{branchOfficeBean.addRelation}"
+									update="branchOfficeform:branchofficedetailspanel" />
+								<p:spacer width="2em;" />
+								<p:commandButton value="Save"
+									actionListener="#{branchOfficeBean.save}"
+									update="growlmsg, branchOfficeform:branchofficepanel" />
+								<p:spacer width="2em;" />
+								<p:commandButton value="Cancel &amp; Go Back"
+									actionListener="#{branchOfficeBean.cancel}"
+									action="#{branchOfficeBean.navigateTo}" />
+								<p:spacer width="2em;" />
+								<p:commandButton icon="ui-icon-refresh">
+									<p:resetInput
+										target="branchOfficeform:branchofficedetailspanel" />
+								</p:commandButton>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-5">
+								<p:panel header="List of Branch Offices" id="branchofficepanel">
+									<h:inputHidden value="#{branchOfficeBean.loadValidValues}" />
+									<p:dataTable value="#{branchOfficeBean.branchOfficeList}"
+										var="boffice">
+										<p:column headerText="Branch Id" width="15%">
+											<p:commandLink value="#{boffice.id}">
+												<p:ajax listener="#{branchOfficeBean.findById}"
+													update="branchOfficeform:branchofficedetailspanel, branchOfficeform:growlmsg" />
+											</p:commandLink>
+										</p:column>
+										<p:column headerText="#{cLabel.branchName}" width="40%">
+											<p:outputLabel value="#{boffice.name}" />
+										</p:column>
+										<p:column headerText="Remove" width="7%">
+											<p:commandButton icon="ui-icon-trash" update="">
+
+											</p:commandButton>
+										</p:column>
+									</p:dataTable>
+								</p:panel>
+							</div>
+							<div class="ui-g-7">
+								<p:panel header="Branch Office Details "
+									id="branchofficedetailspanel">
+									<h:panelGrid columns="2">
+										<h:inputHidden />
+										<h:inputHidden value="#{branchOfficeBean.branchOffice.id}" />
+
+										<p:outputLabel value="#{cLabel.branchName}" for="bname" />
+										<p:inputText id="bname"
+											value="#{branchOfficeBean.branchOffice.name}" disabled="#{branchOfficeBean.disableId}" size="40"
+											required="true"
+											requiredMessage="Please enter the Branch Name"
+											placeholder="Branch Name " />
+
+										<p:outputLabel value="#{cLabel.addressLabel}" for="baddress" />
+										<p:inputTextarea id="baddress"
+											value="#{branchOfficeBean.branchOffice.address.address}"
+											cols="30" rows="3"
+											requiredMessage="Please enter the Branch Address"
+											placeholder="Branch Name Address " />
+
+										<p:outputLabel value="#{cLabel.cityLabel}" for="bcity" />
+										<p:inputText id="bcity"
+											value="#{branchOfficeBean.branchOffice.address.city}"
+											size="30" required="true"
+											requiredMessage="Please enter the Branch City"
+											placeholder="Branch City " />
+
+
+										<p:outputLabel value="#{cLabel.emailLabel}" for="bEmail" />
+										<p:inputText id="bEmail"
+											value="#{branchOfficeBean.branchOffice.address.emailId}"
+											required="true"
+											requiredMessage="Please enter the branch email Id" size="30"
+											placeholder="Branch Email Id " />
+
+										<p:outputLabel value="#{cLabel.phoneLable}" for="bphone" />
+										<p:inputText id="bphone"
+											value="#{branchOfficeBean.branchOffice.address.phone}"
+											size="30" placeholder="Branch Phone " />
+
+										<p:outputLabel value="#{cLabel.mobileLabel}" for="bmobile" />
+										<p:inputText id="bmobile"
+											value="#{branchOfficeBean.branchOffice.address.mobile}"
+											size="30" required="true"
+											requiredMessage="please enter the Branch Mobile number"
+											maxlength="10" placeholder="Branch Mobile " />
+
+										<p:outputLabel value="#{cLabel.stateLabel}" for="bstate" />
+										<p:inputText id="bstate"
+											value="#{branchOfficeBean.branchOffice.address.state}"
+											size="30" placeholder="Branch State " />
+
+										<p:outputLabel value="#{cLabel.countryLabel}" for="bcountry" />
+										<p:inputText id="bcountry"
+											value="#{branchOfficeBean.branchOffice.address.country}"
+											size="30" placeholder="Branch Country " />
+
+									</h:panelGrid>
+								</p:panel>
+							</div>
+						</div>
+					</div>
+				</p:layoutUnit>
+			</p:layout>
+		</h:form>
+	</ui:insert>
+</h:body>
+</html>

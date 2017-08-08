@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title><ui:insert name="title">Clients Manager</ui:insert></title>
+</h:head>
+<h:body>
+	<ui:insert>
+		<h:form id="clientsform">
+			<p:layout fullPage="true">
+				<p:layoutUnit position="north" size="60">
+
+				</p:layoutUnit>
+				<p:layoutUnit position="west" size="200" collapsible="true"
+					header="Menu">
+					<p:panelMenu model="#{navigationControllerBean.menuModel}" />
+				</p:layoutUnit>
+				<p:layoutUnit position="center" size="600">
+					<p:growl id="growlmsg" showDetail="true" showSummary="true" />
+					<f:loadBundle var="cLabel" basename="com.lables.bvs-common-label" />
+					<div id="content">
+						<div class="ui-g">
+							<div class="ui-g-5 ">
+								<h2>Clients Management</h2>
+							</div>
+							<div class="ui-g-7">
+								<p:commandButton value="Add New"
+									actionListener="#{clientsCtrlBean.addRelation}"
+									update="clientsform:clientsdetailspanel" />
+								<p:spacer width="2em;" />
+								<p:commandButton value="Save"
+									actionListener="#{clientsCtrlBean.save}"
+									update="growlmsg, clientsform:clientsepanel" />
+								<p:spacer width="2em;" />
+								<p:commandButton value="Cancel &amp; Go Back"
+									actionListener="#{clientsCtrlBean.cancel}"
+									action="#{clientsCtrlBean.navigateTo}" />
+								<p:spacer width="2em;" />
+								<p:commandButton icon="ui-icon-refresh">
+									<p:resetInput target="clientsform:clientsdetailspanel" />
+								</p:commandButton>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-5">
+								<p:panel header="List of Clients" id="clientsepanel">
+									<h:inputHidden value="#{clientsCtrlBean.loadValidValues}" />
+									<h:panelGrid columns="2">
+										<p:outputLabel value="Branch Office" />
+										<p:selectOneMenu value="#{clientsCtrlBean.clients.branchOffice.id}">
+											<f:selectItem itemValue="-1" itemLabel="Select One" />
+											<f:selectItems value="#{clientsCtrlBean.branchList}"
+												var="branch" itemValue="#{branch.id}"
+												itemLabel="#{branch.name}" />
+											<p:ajax
+												listener="#{clientsCtrlBean.readPersonalRelationShip}"
+												update="clientsepanel" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+									<p:dataTable value="#{clientsCtrlBean.clientsList}"
+										var="clients">
+										<p:column headerText="#{cLabel.clientIdLabel}" width="15%">
+											<p:commandLink value="#{clients.id}">
+												<p:ajax listener="#{clientsCtrlBean.findById}"
+													update="clientsform:clientsdetailspanel, clientsform:growlmsg" />
+											</p:commandLink>
+										</p:column>
+										<p:column headerText="#{cLabel.clientNameLabel}" width="40%">
+											<p:outputLabel value="#{clients.clientName}" />
+										</p:column>
+										<p:column headerText="Remove" width="7%">
+											<p:commandButton icon="ui-icon-trash" update="">
+
+											</p:commandButton>
+										</p:column>
+									</p:dataTable>
+								</p:panel>
+							</div>
+							<div class="ui-g-7">
+								<p:panel header="Clients Details " id="clientsdetailspanel">
+									<h:panelGrid columns="2">
+										<h:inputHidden />
+										<h:inputHidden value="#{clientsCtrlBean.clients.id}" />
+
+										<p:outputLabel value="#{cLabel.branchName}" for="bname" />
+										<p:inputText id="bname"
+											value="#{clientsCtrlBean.clients.clientName}"
+											disabled="#{clientsCtrlBean.disableId}" size="40"
+											required="true"
+											requiredMessage="Please enter the Client Name"
+											placeholder="Client Name " />
+
+										<p:outputLabel value="#{cLabel.addressLabel}" for="baddress" />
+										<p:inputTextarea id="baddress"
+											value="#{clientsCtrlBean.clients.address}" cols="30" rows="3"
+											requiredMessage="Please enter the Clients Address"
+											placeholder="Clients Address " />
+
+										<p:outputLabel value="#{cLabel.emailLabel}" for="bEmail" />
+										<p:inputText id="bEmail"
+											value="#{clientsCtrlBean.clients.emailId}" required="true"
+											requiredMessage="Please enter the clients email Id" size="30"
+											placeholder="Clients Email Id " />
+
+										<p:outputLabel value="#{cLabel.phoneLable}" for="bphone" />
+										<p:inputText id="bphone"
+											value="#{clientsCtrlBean.clients.phoneNumber}" size="30"
+											placeholder="Branch Phone " />
+
+										<p:outputLabel value="#{cLabel.mobileLabel}" for="bmobile" />
+										<p:inputText id="bmobile"
+											value="#{clientsCtrlBean.clients.mobileNumber}" size="30"
+											required="true"
+											requiredMessage="please enter the Branch Mobile number"
+											maxlength="10" placeholder="Branch Mobile " />
+
+									</h:panelGrid>
+								</p:panel>
+							</div>
+						</div>
+					</div>
+				</p:layoutUnit>
+			</p:layout>
+		</h:form>
+	</ui:insert>
+</h:body>
+</html>

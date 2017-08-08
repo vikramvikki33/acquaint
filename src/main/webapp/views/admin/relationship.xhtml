@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title><ui:insert name="title">RelationShip Manager</ui:insert></title>
+</h:head>
+
+<h:body>
+	<ui:insert>
+		<h:form id="relationform">
+			<p:layout fullPage="true">
+				<p:layoutUnit position="north" size="60">
+
+				</p:layoutUnit>
+				<p:layoutUnit position="west" size="200" collapsible="true"
+					header="Menu">
+					<p:panelMenu model="#{navigationControllerBean.menuModel}" />
+				</p:layoutUnit>
+				<p:layoutUnit position="center" size="600">
+					<p:growl id="growlmsg" showDetail="true" showSummary="true" />
+					<f:loadBundle var="cLabel" basename="com.lables.bvs-common-label" />
+					<div id="content">
+						<div class="ui-g">
+							<div class="ui-g-5 ">
+								<h2> Relation Ship Management  </h2>
+							</div>
+							<div class="ui-g-7">
+								<p:commandButton value="Add New"
+									actionListener="#{perRelationBean.addRelation}"
+									update="relationform:realtiondetailspanel" />
+								<p:spacer width="2em;" />
+								<p:commandButton value="Save"
+									actionListener="#{perRelationBean.save}"
+									update="growlmsg, relationform:realtionpanel" />
+								<p:spacer width="2em;" />
+								<p:commandButton value="Cancel &amp; Go Back"
+									actionListener="#{perRelationBean.cancel}"
+									action="#{perRelationBean.navigateTo}" />
+								<p:spacer width="2em;" />
+								<p:commandButton icon="ui-icon-refresh">
+									<p:resetInput target="relationform:realtiondetailspanel" />
+								</p:commandButton>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-5">
+								<p:panel header="RelationShip List" id="realtionpanel">
+									<h:inputHidden value="#{perRelationBean.loadValidValues}" />
+									<p:dataTable value="#{perRelationBean.personalRelationList}"
+										var="pRelation" id="usertable">
+										<p:column headerText="#{cLabel.realtionShipCode}" width="15%">
+											<p:commandLink value="#{pRelation.id}">
+												<p:ajax listener="#{perRelationBean.findById}"
+													update="relationform:realtiondetailspanel, relationform:growlmsg" />
+											</p:commandLink>
+										</p:column>
+										<p:column headerText="#{cLabel.relationDescription}"
+											width="40%">
+											<p:outputLabel value="#{pRelation.description}" />
+										</p:column>
+										<p:column headerText="Remove" width="7%">
+											<p:commandButton icon="ui-icon-trash" update="">
+
+											</p:commandButton>
+										</p:column>
+									</p:dataTable>
+								</p:panel>
+							</div>
+							<div class="ui-g-7">
+								<p:panel header="RelationShip Details" id="realtiondetailspanel">
+									<h:panelGrid columns="2">
+										<p:outputLabel value="#{cLabel.realtionShipCode}" for="relId" />
+										<p:inputText disabled="#{perRelationBean.disableId}"
+											id="relId" value="#{perRelationBean.personalRelationShip.id}"
+											size="30" required="true"
+											requiredMessage="Please enter a RelationShip Code"
+											placeholder="RelationShip Code" />
+
+										<p:outputLabel value="#{cLabel.relationDescription}"
+											for="pdesc" />
+										<p:inputText id="pdesc"
+											value="#{perRelationBean.personalRelationShip.description}"
+											size="40" required="true"
+											requiredMessage="Please enter RelationShip Description"
+											placeholder="Relationship Description " />
+
+									</h:panelGrid>
+								</p:panel>
+							</div>
+						</div>
+					</div>
+				</p:layoutUnit>
+			</p:layout>
+		</h:form>
+	</ui:insert>
+</h:body>
+
+</html>
